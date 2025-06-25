@@ -1,0 +1,110 @@
+# .github/workflows/hello_world_check.yml
+
+# --- Define When execute this Workflow ---
+on: 
+  push:
+    branches:
+      - main # Trigger on push to main Branch
+      - develop # Trigger on push to develop Branch
+    pull_request:
+      branches:
+        - main
+        - develop
+      workflow_dispatch: # Allow manual triggering of the workflow
+
+# --- Define Environments Variable (ENV) globals To this Workflow (Optional) ---
+env: 
+  PYTHON_VERSION: "3.9" # Define the Python Version to use
+
+# --- Define jobs To This Workflow ---
+jobs:
+  # --- job 1: Verify Git and 'Hello World' and Python Version ---
+  runs-on: ubuntu-latest # Define the OS to run this job
+
+  steps: 
+    - name: 1. Check out code # Check out the code from the repository
+      uses: actions/checkout@v4
+
+    - name: 2. Set up Python ${{ env.PYTHON_VERSION }} # Set up the Python environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 3. Message 'Hello World' in Python # Run a simple Python Script
+      run: |
+        echo "Execute a simple Python script to print 'Hello World' in the file 'hello_world.py'"
+        # repository root to create the file
+        python hello_world/hello_world.py
+        echo "file 'hello_world.py' executed successfully"
+
+    - name: 4. Demonstrate 'git add .'
+        run: |
+          echo "Demonstrating 'git add .'"
+        # Create a dummy file to simulate changes
+      echo "This is a new file" > new_file.txt
+      git add .
+      git status # To see that the file has been staged
+      shell: bash # Ensures bash is used for commands
+
+    - name: 5. Demonstrate 'git commit -m "Test message"'
+      run: |
+        echo "Demonstrating 'git commit'"
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
+        git commit -m "feat: Test file created by CI" || echo "No changes to commit or already committed."
+        # The '|| echo' is so the step doesn't fail if there are no changes
+      shell: bash
+
+    - name: 6. Demonstrate 'git fetch'
+      run: |
+        echo "Demonstrating 'git fetch'"
+        git fetch origin
+        echo "Fetch completed."
+      shell: bash
+
+    - name: 7. Demonstrate 'git pull'
+      run: |
+        echo "Demonstrating 'git pull'"
+        git pull origin ${{ github.ref_name }} # Pull from the current branch
+        echo "Pull completed."
+      shell: bash
+
+    - name: 8. Demonstrate 'git push -u origin branch' (simulated)
+      run: |
+        echo "Demonstrating 'git push -u origin branch'"
+        echo "Warning: A real 'git push' from a workflow requires access tokens and is used with caution."
+        echo "Simulating push..."
+        # We do NOT execute 'git push' directly here, as the CI context
+        # rarely performs a real push to the same repo that triggered it.
+        # If you needed a push, you would use a specific Action like 'peter-evans/create-pull-request'
+        # or configure tokens with write scope.
+        echo "Command git push -u origin ${{ github.ref_name }} would be executed here."
+      shell: bash
+    
+# --- Job 2 (Optional): Demonstration of a dependency installation step ---
+  install_dependencies_check:
+    runs-on: ubuntu-latest
+    needs: git_and_hello_check # This job will wait for the first one to finish
+    steps:
+      - name: 1. Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 2. Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 3. Create a dummy requirements.txt file
+        run: |
+          echo "requests==2.31.0" > requirements.txt
+          echo "numpy==1.26.4" >> requirements.txt
+        shell: bash
+
+      - name: 4. Install dependencies (pip install)
+        run: |
+          echo "Installing dependencies from requirements.txt..."
+          pip install -r requirements.txt
+          echo "Dependencies installed. (If this step passes, pip works)."
+        shell: bash
+
+    

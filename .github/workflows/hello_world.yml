@@ -84,11 +84,8 @@ jobs:
           echo "Command git push -u origin ${{ github.ref_name }} would be executed here."
         shell: bash
 
-  # --- Job 2 (Optional): Demonstration of a dependency installation step ---
-  # El nombre de este trabajo ya era correcto.
   install_dependencies_check:
     runs-on: ubuntu-latest
-    # Se ha actualizado la dependencia para usar el nombre del primer trabajo corregido.
     needs: git_and_hello_check # This job will wait for the first one to finish
     steps:
       - name: 1. Checkout Code

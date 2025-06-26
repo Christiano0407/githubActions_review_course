@@ -1,0 +1,58 @@
+# Virtual Environment & Directories
+.venv/
+venv/
+env/
+/bin/
+/include/
+/lib/
+/share/
+
+# Files To Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+
+# Register Files
+*.log
+logs/
+*.sqlite3
+
+# Files editor/IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# Files Configuration local/secrets
+.env
+.flaskenv
+
+# files de builds y packs
+dist/
+build/
+*.egg-info/
+
+# Files de Jupyter Notebook
+.ipynb_checkpoints
+
+# Files de Data Generate
+uploads/
+tmp/
+
+# Files de cobertura de pruebas
+.coverage
+htmlcov/
+
+# Files specific de Docker
+*.dockerignore
+
+# Files Miscellaneous
+.DS_Store
+Thumbs.db

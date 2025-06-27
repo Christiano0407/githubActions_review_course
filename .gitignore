@@ -1,3 +1,4 @@
+# Environment Variable | Virtual
 .venv/
 __pycache__/
 *.pyc
@@ -6,3 +7,9 @@ __pycache__/
 .Python
 .ipynb_checkpoints
 .pytest_cache/
+
+# Data Base Files
+*.db
+
+# Uvicorn Files
+*.pid

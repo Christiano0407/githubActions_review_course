@@ -34,7 +34,7 @@ logs/
 .env
 .flaskenv
 
-# files de builds y packs
+# Files de builds y packs
 dist/
 build/
 *.egg-info/
@@ -56,3 +56,7 @@ htmlcov/
 # Files Miscellaneous
 .DS_Store
 Thumbs.db
+
+# Additional ignored files from dev_api
+.pytest_cache/
+*.pid

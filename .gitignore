@@ -9,7 +9,5 @@ __pycache__/
 .pytest_cache/
 
 # Data Base Files
-*.db
-
 # Uvicorn Files
 *.pid

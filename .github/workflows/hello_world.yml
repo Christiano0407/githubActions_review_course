@@ -68,7 +68,7 @@ jobs:
       - name: 7. Demonstrate 'git pull'
         run: |
           echo "Demonstrating 'git pull'"
-          git pull origin ${{ github.ref_name }} # Pull from the current branch
+          git pull origin "${{ github.head_ref || github.ref_name }}" # Pull from the current branch
           echo "Pull completed."
         shell: bash
 

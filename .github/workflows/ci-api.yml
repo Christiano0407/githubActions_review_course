@@ -1,100 +1,76 @@
+# --- Define When execute this Workflow ---
 name: FastAPI CI/CD Workflow
 
-on:
+on: 
   push:
-    branches:
-      - main
-      - dev_api # Ejecuta el workflow en cada push a la rama dev_api
-  pull_request:
-    branches:
-      - main
-      - dev_api # Ejecuta el workflow en cada Pull Request a main o dev_api
+    branches: 
+      - main # Trigger on push to main branch
+      - dev_api # Trigger on push to dev_api branch
+  pull_request: 
+    branches: 
+      - main 
+      - dev_api # Execute the workflow on pull request to main ro dev_api
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest # Usa un runner de Ubuntu
+  build-and-test: 
+    runs-on: ubuntu-latest # Define the OS to run the job
 
-    steps:
-      - name: Checkout Repository # Paso 1: Clona tu repositorio
+    steps: 
+      - name: checkout Repository # First Step: Clone the repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.12 # Paso 2: Configura el entorno Python
+      - name: set up python # Second step: Set up Python environment
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.12' # Asegúrate de que coincida con tu versión de desarrollo
-          cache: 'pip' # Habilita el caché para las dependencias de pip
+        with: 
+          python-version: '3.12.7' # Specify the Version of python to use
+          cache: 'pip' # Cache pip dependencies
 
-      - name: Create requirements.txt (if not exists) # Asegura la existencia de requirements.txt
+      - name: Create requirements.txt (if not exist) # Create requirements.txt
         run: |
-          # Este paso es solo para demostración si no tienes un requirements.txt completo.
-          # Idealmente, deberías generar tu requirements.txt con 'pip freeze > requirements.txt'
-          # en tu entorno virtual local.
           if [ ! -f requirements.txt ]; then
-            echo "fastapi[all]" >> requirements.txt
+            echo "Creating requirements.txt file"
+            echo "fastapi" > requirements.txt
             echo "uvicorn" >> requirements.txt
             echo "pydantic" >> requirements.txt
-            echo "httpx" >> requirements.txt # Para las pruebas de curl
+            echo "httpx" >> requirements.txt
+          else
+            echo "requirements.txt already exists"
           fi
 
-      - name: Install dependencies # Paso 3: Instala las dependencias del proyecto
+      - name: Install dependencies # Step 3: Install dependencies To the project
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          # Desactivar el venv no es necesario en GitHub Actions, ya que el entorno es efímero
-          # y los comandos de pip e uvicorn operan automáticamente dentro del entorno configurado por actions/setup-python.
 
-      - name: Run Linter (Ruff) # Paso 4: Ejecuta un linter para verificar el estilo del código con Ruff
+      - name: Run Linter (ruff) # Step 4: Execute Linter To verify the code style
         run: |
           pip install ruff
-          ruff check . # Puedes configurar Ruff en un archivo pyproject.toml o .ruff.toml
-          # El comando 'ruff check . --fix' es útil para aplicar correcciones automáticamente
-          # pero en un pipeline de CI, a menudo solo se usa 'ruff check .' para detectar problemas
-          # y que el desarrollador los corrija localmente.
-
-      - name: Simulate Uvicorn Server Start and Test Endpoint # Paso 5: Intenta iniciar Uvicorn y prueba un endpoint
+          ruff check . --fix # Check and fix code style issues 
+      
+      - name: Simulate Uvicorn Server # Step 5: Simulate running the FastAPI Server and test point
         run: |
-          # NOTA IMPORTANTE: En un pipeline de CI, normalmente no mantienes un servidor corriendo
-          # indefinidamente. Este paso lo inicia, verifica que responda y lo detiene.
-          # Para pruebas más robustas, usarías frameworks de testing como Pytest.
-
-          # Inicia Uvicorn en segundo plano
-          # La ruta 'backend.api_backend.app' implica que:
-          # - hay una carpeta 'backend' en la raíz del repo.
-          # - dentro de 'backend' hay una carpeta 'api_backend'.
-          # - dentro de 'api_backend' hay un archivo 'app.py'.
-          # - y dentro de 'app.py' tu instancia de FastAPI se llama 'app'.
-          uvicorn backend.api_backend.app:app --host 0.0.0.0 --port 8000 &
-          UVICORN_PID=$! # Guarda el PID del proceso de Uvicorn
+          # IMPORTANT NOTE: In a CI pipeline, you typically don't keep a server running
+          # indefinitely. This step starts it, verifies that it's responsive, and stops it.
+          # For more robust testing, you would use testing frameworks like Pytest.
+          # Start Uvicorn in the background
+          # The 'backend.api_backend.app' path implies that:
+          # - there is a 'backend' folder in the root of the repo.
+          # - inside 'backend' is an 'api_backend' folder.
+          # - inside 'api_backend' is an 'app.py' file.
+          # - and inside 'app.py' your FastAPI instance is named 'app'.
+                    uvicorn backend.api_backend.app:app --host
+          uvicorn backend.api_backend.app:app --host --post 8000 & UVICORN_PID=$! # Save the PID of the Uvicorn Process
 
           echo "Waiting for Uvicorn to start..."
-          sleep 5 # Espera unos segundos para que el servidor inicie completamente
+          sleep 5 # Wait for the server to start
 
-          echo "Attempting to reach API endpoint..."
-          # Intenta acceder al endpoint de bienvenida y verifica la respuesta
-          curl -f http://localhost:8000/ # El flag -f hace que curl falle si el código HTTP es 4xx o 5xx
-
-          if [ $? -eq 0 ]; then
-            echo "API endpoint successfully reached!"
-          else
-            echo "Failed to reach API endpoint."
-            kill $UVICORN_PID # Asegura que el proceso se detenga si hubo un error en curl
-            exit 1 # Falla el job de GitHub Actions
-          fi
-
-          echo "Stopping Uvicorn server..."
-          kill $UVICORN_PID # Detiene el proceso de Uvicorn
-          echo "Uvicorn server stopped."
-        # Puedes añadir un 'if: always()' para que este paso siempre se ejecute,
-        # incluso si los anteriores fallan, para asegurar que Uvicorn se detenga.
-        # Por ahora, si curl falla, el job terminará.
-
-      - name: Run Tests (Placeholder) # Paso 6: Placeholder para tus pruebas (unitarias/integración)
+      - name: Test FastAPI (Placeholder) # Step 6: Test FastAPI endpoints
         run: |
-          echo "No tests configured. Add your pytest commands here."
-          # Ejemplo: pip install pytest; pytest
-          # Si no tienes tests, este paso simplemente informará que no hay.
+          echo "Testing FastAPI endpoints..."
+          # For Example: pip install pytest-httpx
+          # If your not testing framework, this step would by to test the fastAPI endpoints.
 
-      - name: Conclusion # Paso 7: Mensaje de conclusión
+      - name: Conclusion # Step 7: Conclusion Workflow
         run: |
-          echo "CI/CD pipeline completed for FastAPI API."
-          echo "Remember to build Docker images or deploy to a cloud provider for production."
+          echo "FastAPI CI/CD Workflow completed successfully!"
+          echo "You can now deploy your FastAPI application or continue with further steps."

@@ -1,13 +1,62 @@
-# Environment Variable | Virtual
+# Virtual Environment & Directories
 .venv/
+venv/
+env/
+/bin/
+/include/
+/lib/
+/share/
+
+# Files To Cache Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-.ipynb_checkpoints
-.pytest_cache/
+.Python/
 
-# Data Base Files
-# Uvicorn Files
+# Register Files
+*.log
+logs/
+*.sqlite3
+
+# Files editor/IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# Files Configuration local/secrets
+.env
+.flaskenv
+
+# Files de builds y packs
+dist/
+build/
+*.egg-info/
+
+# Files de Jupyter Notebook
+.ipynb_checkpoints
+
+# Files de Data Generate
+uploads/
+tmp/
+
+# Files de cobertura de pruebas
+.coverage
+htmlcov/
+
+# Files specific de Docker
+*.dockerignore
+
+# Files Miscellaneous
+.DS_Store
+Thumbs.db
+
+# Additional ignored files from dev_api
+.pytest_cache/
 *.pid

@@ -43,10 +43,10 @@ jobs:
           # Desactivar el venv no es necesario en GitHub Actions, ya que el entorno es efímero
           # y los comandos de pip e uvicorn operan automáticamente dentro del entorno configurado por actions/setup-python.
 
-      - name: Run Linter (Ruff) # Paso 4: Ejecuta un linter para verificar el estilo del código con Ruff
+      - name: Run Linter (Ruff) and Fix # Paso 4: Ejecuta un linter para verificar y corregir el estilo del código con Ruff
         run: |
           pip install ruff
-          ruff check . --fix
+          ruff check . --fix # <--- ¡CAMBIO AQUÍ! Añadimos --fix
           # Si quieres que el workflow falle si aún hay errores después de --fix,
           # puedes añadir 'ruff check . --exit-zero' o 'ruff check .' de nuevo.
           # Por ahora, con --fix, si corrige el error, saldrá con 0.

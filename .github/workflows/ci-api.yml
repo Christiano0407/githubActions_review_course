@@ -1,0 +1,28 @@
+# .github/workflows/api_workflow.yml
+
+# --- Define When execute this Workflow ---
+name: FastAPI CI/CD Workflow
+
+on: 
+  push:
+    branches: 
+      - main # Trigger on push to main branch
+      - dev_api # Trigger on push to dev_api branch
+    pull_request: 
+      branches: 
+        - main 
+        - dev_api # Execute the workflow on pull request to main ro dev_api
+
+jobs:
+  build-and-test: 
+    runs-on: ubuntu-latest # Define the OS to run the job
+
+    steps: 
+      - name: checkout Repository # First Step: Clone the repository
+        uses: actions/checkout@v4
+
+      - name: set up python # Second step: Set up Python environment
+        uses: actions/setup-python@v5
+        with: 
+          python-version: '3.9' # Specify the Version of python to use
+          cache: 'pip' # Cache pip dependencies

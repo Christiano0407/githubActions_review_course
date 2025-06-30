@@ -46,10 +46,11 @@ jobs:
       - name: Run Linter (Ruff) # Paso 4: Ejecuta un linter para verificar el estilo del código con Ruff
         run: |
           pip install ruff
-          ruff check . # Puedes configurar Ruff en un archivo pyproject.toml o .ruff.toml
-          # El comando 'ruff check . --fix' es útil para aplicar correcciones automáticamente
-          # pero en un pipeline de CI, a menudo solo se usa 'ruff check .' para detectar problemas
-          # y que el desarrollador los corrija localmente.
+          ruff check . --fix
+          # Si quieres que el workflow falle si aún hay errores después de --fix,
+          # puedes añadir 'ruff check . --exit-zero' o 'ruff check .' de nuevo.
+          # Por ahora, con --fix, si corrige el error, saldrá con 0.
+          # Si no puede corregirlo, saldrá con 1 y el job fallará.
 
       - name: Simulate Uvicorn Server Start and Test Endpoint # Paso 5: Intenta iniciar Uvicorn y prueba un endpoint
         run: |

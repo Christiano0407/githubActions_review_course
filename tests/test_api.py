@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from ..backend.api_backend.app import app, fake_db, Item, HTTPException
+from backend.api_backend.app import app, fake_db, Item, HTTPException
 import pytest
 
 # ================================================================= #

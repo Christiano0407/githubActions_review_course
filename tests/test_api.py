@@ -44,7 +44,7 @@ def test_read_item():
   existing_item_id = 1
   response = client.get(f"/items/{existing_item_id}")
   assert response.status_code == 200
-  expected_item = next((item  for item in fake_db if item["id"] == {existing_item_id}))
+  expected_item = next((item  for item in fake_db if item["id"] == existing_item_id), None)
   assert response.json() == expected_item
 
 def test_read_item_not_exist():

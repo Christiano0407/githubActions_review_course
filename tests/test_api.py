@@ -26,7 +26,7 @@ def test_read_items():
     Test to get all Items (/items/) from database (fake_db) | return status code 200 ok
   """
   # Affirm the response from endpoint (get) #
-  response = client.get("items/")
+  response = client.get("/items/")
   ## Response status code 200 ok ##
   assert response.status_code == 200
   ### Verify the response is the type list ###
@@ -42,9 +42,9 @@ def test_read_item():
     Verify if the endpoint return 'ID' (exist), and the status code 200
   """
   existing_item_id = 1
-  response = client.get(f"items/{existing_item_id}")
+  response = client.get(f"/items/{existing_item_id}")
   assert response.status_code == 200
-  expected_item = next((item  for item in fake_db if item["id"] == existing_item_id))
+  expected_item = next((item  for item in fake_db if item["id"] == {existing_item_id}))
   assert response.json() == expected_item
 
 def test_read_item_not_exist():
@@ -52,7 +52,7 @@ def test_read_item_not_exist():
     Verify if return a Error 404 if not exist the item with ID
   """
   non_exist_item_id = 999
-  response = client.get(f"item/{non_exist_item_id}")
+  response = client.get(f"/items/{non_exist_item_id}")
   assert response.status_code == 404
   assert response.json() == {"details": "Item Not Exist."}
 

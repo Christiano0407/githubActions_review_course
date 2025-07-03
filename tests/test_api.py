@@ -54,7 +54,7 @@ def test_read_item_not_exist():
   non_exist_item_id = 999
   response = client.get(f"/items/{non_exist_item_id}")
   assert response.status_code == 404
-  assert response.json() == {"details": "Item Not Exist."}
+  assert response.json() == {"detail": "Item Not Exist."}
 
 
 # =========================================================================== #

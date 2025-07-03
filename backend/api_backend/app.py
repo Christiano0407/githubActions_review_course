@@ -7,7 +7,7 @@ app = FastAPI()
 # Base de simulate data (en memory)
 fake_db = [
     {"id": 1, "name": "Apple", "description": "Fruit amazing", "price": 1.0, "tax": 0.05},
-    {"id": 2, "name": "Milk", "description": "The Best Milk", "price": 1.5},
+    {"id": 2, "name": "Milk", "description": "The Best Milk", "price": 1.5, "tax": None},
     {"id": 3, "name": "Bread", "description": "One of the best bread", "price": 2.0, "tax": 0.10},
 ]
 
@@ -41,4 +41,4 @@ async def read_item(item_id: int):
     """
     item = next((item for item in fake_db if item["id"] == item_id), None)
     if item is None: 
-        raise HTTPException(status_code=404, details="Item Not Exist.")
+        raise HTTPException(status_code=404, detail="Item Not Exist.")

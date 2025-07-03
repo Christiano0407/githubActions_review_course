@@ -65,14 +65,7 @@ jobs:
           echo "Fetch completed."
         shell: bash
 
-      - name: 7. Demonstrate 'git pull'
-        run: |
-          echo "Demonstrating 'git pull'"
-          git pull origin "${{ github.head_ref || github.ref_name }}" # Pull from the current branch
-          echo "Pull completed."
-        shell: bash
-
-      - name: 8. Demonstrate 'git push -u origin branch' (simulated)
+      - name: 7. Demonstrate 'git push -u origin branch' (simulated)
         run: |
           echo "Demonstrating 'git push -u origin branch'"
           echo "Warning: A real 'git push' from a workflow requires access tokens and is used with caution."

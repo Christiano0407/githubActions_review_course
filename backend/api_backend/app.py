@@ -42,3 +42,4 @@ async def read_item(item_id: int):
     item = next((item for item in fake_db if item["id"] == item_id), None)
     if item is None: 
         raise HTTPException(status_code=404, detail="Item Not Exist.")
+    return item

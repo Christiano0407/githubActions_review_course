@@ -55,3 +55,16 @@ def test_read_item_not_exist():
   response = client.get(f"item/{non_exist_item_id}")
   assert response.status_code == 404
   assert response.json() == {"details": "Item Not Exist."}
+
+
+# =========================================================================== #
+# Optional: Test with pytest fixture to clean the Database (fake_db) 
+# =========================================================================== #
+@pytest.fixture(name="clean_fake_db")
+def fixture_clean_fake_db(): 
+  """
+    'Fixture' with Pytest to clean and reset the Database (fake_db) before each test
+  """
+  original_database = list(fake_db)
+  yield # This is where execute the Test 
+  fake_db[:] = original_database
